@@ -6,9 +6,9 @@ public class Main
 	public static void main(String[] args)
 	{
 		Scanner keyboard = new Scanner(System.in);
-		String username, command;
+		String username;
 		Environment environment;
-		boolean repeat = true;
+		Repeater repeater = new Repeater();
 		
 		System.out.print("Username:");
 		username = keyboard.nextLine();
@@ -19,69 +19,50 @@ public class Main
 		environment = EnvironmentManager.setUpEnvironment();
 		
 		//command loop
-		while(repeat)
+		while(repeater.verifyRepeat(keyboard))
 		{
-			System.out.println("How can I assist you? Please enter 'help' for a list of commands.");
-			command = keyboard.nextLine().toLowerCase();
-			
-			if(!doCommand(command))
-			{
-				System.out.println(" That was not a valid command.");
-				continue;
-			}
-			
-			repeat = verifyRepeat(keyboard);
+			doCommand(keyboard);
 		}
 		
 	}
 	
-	public static boolean doCommand(String command)
+	public static String getCommand(Scanner keyboard)
 	{
-		switch(command)
+		String command;
+		
+		System.out.println("Enter your command. Enter 'help' for a list of commands.");
+		command = keyboard.nextLine().toLowerCase();
+		
+		return command;
+	}
+	
+	public static void doCommand(Scanner keyboard)
+	{
+		while(true)
 		{
-			case "help": case "h":
+			switch(getCommand(keyboard))
 			{
-				printCommands();
-				break;
-			}
-			case "exit":
-			{
-				System.out.println("Good bye!");
-				System.exit(0);
-			}
-			default:
-			{
-				System.out.println("That was not a valid command.");
-				return false;
+				case "help": case "h":
+				{
+					printCommands();
+					break;
+				}
+				case "exit":
+				{
+					System.out.println("Good bye!");
+					System.exit(0);
+				}
+				default:
+				{
+					System.out.println("That was not a valid command.");
+				}
 			}
 		}
-		
-		return true;
 	}
 	
 	public static void printCommands()
 	{
 		System.out.println("The following is a list of currently supported commands:");
 		System.out.println("help, matCalc, save, exit");
-	}
-	
-	public static boolean verifyRepeat(Scanner keyboard)
-	{
-		String answer;
-		System.out.print("Would you like to run another calculation? (Y/N)");
-		answer = keyboard.nextLine().toLowerCase();
-		
-		switch(answer)
-		{
-			case "yes":
-				return true;
-			case "no":
-				return false;
-			default:
-			{
-				System.out.println("Incorrect input.");
-				return verifyRepeat(keyboard);
-			}	
-		}
 	}
 }
